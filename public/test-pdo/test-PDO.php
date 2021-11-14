@@ -22,6 +22,30 @@
     /*** close the database connection ***/
     $pdo = null;
 ?>
+<?php
+ 
+ $curl = curl_init();
+  
+ curl_setopt_array($curl, array(
+   CURLOPT_URL => "https://imdb-api.com/en/API/SearchSeries/k_i47ursy0/lost",
+   CURLOPT_RETURNTRANSFER => true,
+   CURLOPT_ENCODING => "",
+   CURLOPT_MAXREDIRS => 10,
+   CURLOPT_TIMEOUT => 0,
+   CURLOPT_FOLLOWLOCATION => true,
+   CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+   CURLOPT_CUSTOMREQUEST => "GET",
+ ));
+  
+ $response = curl_exec($curl);
+  
+ curl_close($curl);
+
+
+ $myObject = json_decode($response);
+
+ #echo $response;
+ ?>
 
 <!DOCTYPE html>
 <html>
@@ -44,6 +68,27 @@
 	<h1>Users</h1>
 		<?php
 			echo $allUsers;
+
+			echo $response;
 		?>
+		<table>
+			<thead>
+			<tr>
+				<td>Title</td>
+				<td>Description</td>
+			</tr>
+			</thead>
+			<tbody>
+			<?PHP
+			foreach($myObject->results as $item ):;
+			?>
+			<tr>
+				<td><?PHP echo $item->title; ?></td>
+				<td><?PHP echo $item->description; ?></td>
+			</tr>
+			<?PHP
+			endforeach;
+			?>
+		</table>
 	</body>
 </html>
